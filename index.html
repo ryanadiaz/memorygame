@@ -94,12 +94,12 @@ function reset() {   // Return the click trackers to original state
     pickComplete = false;
 }
 
-console.log("It's red's turn!");
+console.log("It's red's turn!");   // Red team starts first
 $('#redTeam').addClass('redsTurn');
 $('#blueTeam').removeClass('bluesTurn');
 
 $('.card-block').on('click', function() {
-    if (!pickComplete) {
+    if (!pickComplete) {   // If no cards have been selected yet, then continue
         $(this).toggleClass('flipped');
         
         if (redTurn) {
@@ -125,7 +125,7 @@ $('.card-block').on('click', function() {
                     reset();
                 } else {
                     console.log('Not a match!');
-                    setTimeout(function(){
+                    setTimeout(function(){   // Waits 700ms then flips both cards back over and resets for the other team
                         $('.selected.unmatched').toggleClass('flipped').removeClass('selected');
                         $('#redTeam').removeClass('redsTurn');
                         $('#blueTeam').addClass('bluesTurn');
@@ -148,7 +148,7 @@ $('.card-block').on('click', function() {
                 clickTwo.addClass('selected').addClass('unmatched');
                 pickComplete = true;
 
-                if (clickOne.attr('data-id') == clickTwo.attr('data-id')) {
+                if (clickOne.attr('data-id') == clickTwo.attr('data-id')) {   // If both selects are a match
                     clickOne.addClass('blueWin').addClass('matched').removeClass('unmatched');
                     clickTwo.addClass('blueWin').addClass('matched').removeClass('unmatched');
                     blueCounter++;
@@ -157,7 +157,7 @@ $('.card-block').on('click', function() {
                     reset();
                 } else {
                     console.log('Not a match!');
-                    setTimeout(function(){
+                    setTimeout(function(){   // Waits 700ms then flips both cards back over and resets for the other team
                         $('.selected.unmatched').toggleClass('flipped').removeClass('selected');
                         $('#redTeam').addClass('redsTurn');
                         $('#blueTeam').removeClass('bluesTurn');
@@ -169,20 +169,22 @@ $('.card-block').on('click', function() {
                 }
             }
         }
+
         console.log("Red Score: " + redCounter);
         console.log("Blue Score: " + blueCounter);
+
         if (redCounter >= (cards.length / 2) / 2 + 1 || blueCounter >= (cards.length / 2) / 2 + 1 || (redCounter + blueCounter) == cards.length) {   // First player to 11 points wins, otherwise it's a tie at 10 vs 10
-            if (redCounter >= (cards.length / 2) / 2 + 1) {
+            if (redCounter >= (cards.length / 2) / 2 + 1) {   // Red wins
                 $('.modal-header').addClass('red-background');
                 $('#winner').text('Red Wins!');
             }
 
-            if (blueCounter >= (cards.length / 2) / 2 + 1) {
+            if (blueCounter >= (cards.length / 2) / 2 + 1) {   // Blue wins
                 $('.modal-header').addClass('blue-background');
                 $('#winner').text('Blue Wins!');
             }
 
-            if ((redCounter + blueCounter) == cards.length) {
+            if ((redCounter + blueCounter) == cards.length) {   // Tie game
                 $('#winner').text("It's a tie!");
             }
 
