@@ -16,11 +16,11 @@
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light fixed-top wrapper" id="mainNav">
-    <a class="navbar-brand"><span style="padding-right: 25px;">Points</span> <span style="color: red;">Red Team: </span><span id="redPoints" style="padding-right: 25px;">0</span> <span style="color: blue;" class="text-right">Blue Team: </span><span id="bluePoints">0</span> </a>
+    <a class="navbar-brand"><span style="padding-right: 25px;">Points</span> <span style="color: red;" id="redTeam">Red Team: </span><span id="redPoints" style="padding-right: 25px;">0</span> <span style="color: blue;" class="text-right" id="blueTeam">Blue Team: </span><span id="bluePoints">0</span> </a>
 </nav>
 
 <div class="wrapper">
-    <div class="row" id="cards">
+    <div id="cards">
             <!-- Cards get displayed here -->
     </div>
 </div>
@@ -28,20 +28,17 @@
 <!-- Game Over Modal -->
 <div class="modal fade" id="gameoverModal" tabindex="-1" role="dialog" aria-labelledby="gameoverModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="gameoverModalTitle">Game Over!</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="gameoverModalTitle">Game Over!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <span id="winner"></span>
+            </div>
         </div>
-        <div class="modal-body">
-          ...
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -98,11 +95,17 @@ function reset() {   // Return the click trackers to original state
 }
 
 console.log("It's red's turn!");
+$('#redTeam').addClass('redsTurn');
+$('#blueTeam').removeClass('bluesTurn');
+
 $('.card-block').on('click', function() {
     if (!pickComplete) {
         $(this).toggleClass('flipped');
         
-        if (redTurn) { 
+        if (redTurn) {
+            $('#redTeam').addClass('redsTurn');
+            $('#blueTeam').removeClass('bluesTurn');
+            
             if (!click) {   // If this is the first selection, clickOne holds that card's id
                 clickOne = $(this);
                 clickOne.addClass('selected').addClass('unmatched');
@@ -124,6 +127,8 @@ $('.card-block').on('click', function() {
                     console.log('Not a match!');
                     setTimeout(function(){
                         $('.selected.unmatched').toggleClass('flipped').removeClass('selected');
+                        $('#redTeam').removeClass('redsTurn');
+                        $('#blueTeam').addClass('bluesTurn');
                         console.log("It's blue's turn!");
                         redTurn = false;
                         blueTurn = true;
@@ -133,6 +138,7 @@ $('.card-block').on('click', function() {
             }
         } else { 
             console.log("It's blue's turn");
+
             if (!click) {   // If this is the first selection, clickOne holds that card's id
                 clickOne = $(this);
                 clickOne.addClass('selected').addClass('unmatched');
@@ -153,6 +159,8 @@ $('.card-block').on('click', function() {
                     console.log('Not a match!');
                     setTimeout(function(){
                         $('.selected.unmatched').toggleClass('flipped').removeClass('selected');
+                        $('#redTeam').addClass('redsTurn');
+                        $('#blueTeam').removeClass('bluesTurn');
                         console.log("It's red's turn!");
                         redTurn = true;
                         blueTurn = false;
@@ -164,6 +172,20 @@ $('.card-block').on('click', function() {
         console.log("Red Score: " + redCounter);
         console.log("Blue Score: " + blueCounter);
         if (redCounter >= (cards.length / 2) / 2 + 1 || blueCounter >= (cards.length / 2) / 2 + 1 || (redCounter + blueCounter) == cards.length) {   // First player to 11 points wins, otherwise it's a tie at 10 vs 10
+            if (redCounter >= (cards.length / 2) / 2 + 1) {
+                $('.modal-header').addClass('red-background');
+                $('#winner').text('Red Wins!');
+            }
+
+            if (blueCounter >= (cards.length / 2) / 2 + 1) {
+                $('.modal-header').addClass('blue-background');
+                $('#winner').text('Blue Wins!');
+            }
+
+            if ((redCounter + blueCounter) == cards.length) {
+                $('#winner').text("It's a tie!");
+            }
+
             $('#gameoverModal').modal('show');
         }
     }

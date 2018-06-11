@@ -6,6 +6,27 @@ body {
     background: white;
 }
 
+.redsTurn {
+    text-shadow: 1px 1px 0px red, 0 0 1em red, 0 0 1.2em red;
+}
+
+.bluesTurn {
+    text-shadow: 1px 1px 0px blue, 0 0 1em blue, 0 0 1.2em blue;
+}
+
+.red-background {
+    background: red;
+}
+
+.blue-background {
+    background: blue;
+}
+
+.wrapper {
+    max-width: 1165px;
+    margin: 0 auto;
+}
+
 #cards {
     display: flex;
     justify-content: center;
@@ -14,8 +35,8 @@ body {
 
 .card-container {
     margin: 5px;
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     -webkit-perspective: 800px;
     -moz-perspective: 800px;
     -o-perspective: 800px;
@@ -64,8 +85,8 @@ body {
 }
 
 .card-front img, .card-back img {
-    max-width: 150px;
-    height: 150px;
+    max-width: 120px;
+    height: auto;
     position: absolute;
     left: 0;
     top: 0;
