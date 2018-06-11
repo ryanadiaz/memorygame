@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Charlotte, NC Memory Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+      
+        <!-- Local styling -->
+        <link rel="stylesheet" type="text/css" href="main.css" />
+
+        <!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light fixed-top wrapper" id="mainNav">
+    <a class="navbar-brand"><span style="padding-right: 25px;">Points</span> <span style="color: red;">Red Team: </span><span id="redPoints" style="padding-right: 25px;">0</span> <span style="color: blue;" class="text-right">Blue Team: </span><span id="bluePoints">0</span> </a>
+</nav>
+
+<div class="wrapper">
+    <div class="row" id="cards">
+            <!-- Cards get displayed here -->
+    </div>
+</div>
+
+<!-- Game Over Modal -->
+<div class="modal fade" id="gameoverModal" tabindex="-1" role="dialog" aria-labelledby="gameoverModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="gameoverModalTitle">Game Over!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+
+const cards = [   // Object holding all the playing cards
+    {name: '49ers', image: '49ers.png', id: '1'},
+    {name: 'amelies', image: 'amelies.png', id: '2'},
+    {name: 'belk', image: 'belk.png', id: '3'},
+    {name: 'bofa', image: 'bofa.png', id: '4'},
+    {name: 'charlotte', image: 'charlotte.png', id: '5'},
+    {name: 'checkers', image: 'checkers.png', id: '6'},
+    {name: 'cms', image: 'cms.png', id: '7'},
+    {name: 'cpcc', image: 'cpcc.png', id: '8'},
+    {name: 'duke', image: 'duke.png', id: '9'},
+    {name: 'hornets', image: 'hornets.png', id: '10'},
+    {name: 'hounds', image: 'hounds.png', id: '11'},
+    {name: 'knights', image: 'knights.png', id: '12'},
+    {name: 'law', image: 'law.png', id: '13'},
+    {name: 'lkn', image: 'lkn.png', id: '14'},
+    {name: 'novant', image: 'novant.png', id: '15'},
+    {name: 'observer', image: 'observer.png', id: '16'},
+    {name: 'panthers', image: 'panthers.png', id: '17'},
+    {name: 'queens', image: 'queens.png', id: '18'},
+    {name: 'speedway', image: 'speedway.png', id: '19'},
+    {name: 'uncc', image: 'uncc.png', id: '20'}
+];
+
+$.merge(cards, cards);   // Make 2 of each card inside the cards object
+
+// Declare variables
+let click = false;
+let pickComplete = false;
+let redCounter = 0;
+let blueCounter = 0;
+let redTurn = true;
+let blueTurn = false;
+
+function shuffle() {   // Randomize the cards object
+    let keys = Object.keys(cards);
+    keys.sort(function(a,b) {return Math.random() - 0.5;});
+    return keys;
+}
+
+shuffle().forEach(function(key) {   // Display cards in a randomized order
+    $('#cards').append('<section class="card-container"> <div class="card-block" data-id="' + cards[key].id + '"> <div class="card-front"> <img src="union.png"> </div> <div class="card-back">' + '<img src="' + cards[key].image + '"> </div> </div> </section>');
+});
+
+function reset() {   // Return the click trackers to original state
+    clickOne = '';
+    clickTwo = '';
+    click = false;
+    pickComplete = false;
+}
+
+console.log("It's red's turn!");
+$('.card-block').on('click', function() {
+    if (!pickComplete) {
+        $(this).toggleClass('flipped');
+        
+        if (redTurn) { 
+            if (!click) {   // If this is the first selection, clickOne holds that card's id
+                clickOne = $(this);
+                clickOne.addClass('selected').addClass('unmatched');
+                click = true; 
+            } else {   // If this is the second selection, clickTwo holds that card's id
+                clickTwo = $(this)
+                clickTwo.addClass('selected').addClass('unmatched');
+                pickComplete = true;
+
+                if (clickOne.attr('data-id') == clickTwo.attr('data-id')) {   // If both selections are a match
+                    clickOne.addClass('redWin').addClass('matched').removeClass('unmatched');
+                    clickTwo.addClass('redWin').addClass('matched').removeClass('unmatched');
+
+                    redCounter++;
+                    $('#redPoints').text(redCounter);
+                    console.log('You win! Go again.');
+                    reset();
+                } else {
+                    console.log('Not a match!');
+                    setTimeout(function(){
+                        $('.selected.unmatched').toggleClass('flipped').removeClass('selected');
+                        console.log("It's blue's turn!");
+                        redTurn = false;
+                        blueTurn = true;
+                        reset();
+                    }, 700);
+                }
+            }
+        } else { 
+            console.log("It's blue's turn");
+            if (!click) {   // If this is the first selection, clickOne holds that card's id
+                clickOne = $(this);
+                clickOne.addClass('selected').addClass('unmatched');
+                click = true; 
+            } else {   // If this is the second selection, clickTwo holds that card's id
+                clickTwo = $(this)
+                clickTwo.addClass('selected').addClass('unmatched');
+                pickComplete = true;
+
+                if (clickOne.attr('data-id') == clickTwo.attr('data-id')) {
+                    clickOne.addClass('blueWin').addClass('matched').removeClass('unmatched');
+                    clickTwo.addClass('blueWin').addClass('matched').removeClass('unmatched');
+                    blueCounter++;
+                    $('#bluePoints').text(blueCounter);
+                    console.log('You win! Go again.');
+                    reset();
+                } else {
+                    console.log('Not a match!');
+                    setTimeout(function(){
+                        $('.selected.unmatched').toggleClass('flipped').removeClass('selected');
+                        console.log("It's red's turn!");
+                        redTurn = true;
+                        blueTurn = false;
+                        reset();
+                    }, 700);
+                }
+            }
+        }
+        console.log("Red Score: " + redCounter);
+        console.log("Blue Score: " + blueCounter);
+        if (redCounter >= (cards.length / 2) / 2 + 1 || blueCounter >= (cards.length / 2) / 2 + 1 || (redCounter + blueCounter) == cards.length) {   // First player to 11 points wins, otherwise it's a tie at 10 vs 10
+            $('#gameoverModal').modal('show');
+        }
+    }
+});
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>
