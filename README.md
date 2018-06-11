@@ -4,3 +4,7 @@ A memory game similar to "Concentration". Flip cards over while trying to match 
 * Theme is establishments local to Charlotte, NC
 
 ![](https://github.com/ryanadiaz/memorygame/blob/master/memorygame.gif)
+
+* **For testing purposes, variables are logged in the Console**
+
+Live Demo: [https://ryanadiaz.github.io/memorygame/](https://ryanadiaz.github.io/memorygame/)
